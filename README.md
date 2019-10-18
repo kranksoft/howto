@@ -6,6 +6,8 @@ Different startup scripts for Docker containers.
 * [Postgres](docker/postgres/postgres.md)
 * [Teamcity](docker/teamcity/teamcity.md)
 
+* docker run -p 8080:80 maps port 8080 on the host to port 80 in the container.
+
 ## Openshift
 Things related to Openshift/Minishift.
 
