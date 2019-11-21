@@ -1,5 +1,7 @@
 # Postgres
 
+Start a Postgres docker container.
+
 Create the file start_postgres.sh with the following contents:
 
 ```

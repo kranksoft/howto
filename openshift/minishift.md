@@ -1,14 +1,21 @@
 # Minishift
-Running a local openshift cluster with Minishift.
+Running a local openshift cluster with Minishift under a Hyper-V NAT.
+
+- Hyper-V NAT: 192.168.10.0/24
 
 ## Start
 To start minishift after downloading the binary:
-``` minishift start ```
-
+``` 
+minishift start`
+  --network-ipaddress 192.168.10.98 `
+  --network-gateway 192.168.10.1 `
+  --network-nameserver 8.8.8.8
+```
 
 ## Builder images .net core 2.2
 
-In order to build .net core 2.2 sourcecode in Minishift, update the Source to Image builder images. 
+In order to build .net core 2.2 and 3.0 sourcecode in Minishift,  
+update the Source to Image builder images. 
 
 ```
 oc login -u system:admin
