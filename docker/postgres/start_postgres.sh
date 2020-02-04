@@ -15,7 +15,7 @@ if [ "$3" != "" ]; then
   PORT=$3
 fi
 if [ "$4" != "" ]; then
-  TAG=$2
+  TAG=$4
 fi
 
 docker run --name $NAME --restart always \
