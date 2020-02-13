@@ -30,9 +30,21 @@ sudo docker run --name $NAME --restart always \
 Start a container and use psql to create a database with a user.
 
 ```
-docker run -it --rm --network postgres-network postgres psql -h postgres -U postgres
+docker run -it --rm --network postgres-network postgres:12.1:alpine psql -h postgres -U postgres
 
-postgres=# create database mydb;
-postgres=# create user myuser with encrypted password 'mypass';
-postgres=# grant all privileges on database mydb to myuser;
+postgres=# create database keycloak;
+postgres=# create user keycloak with encrypted password 'o9qpmui';
+postgres=# grant all privileges on database keycloak to keycloak;
 ```
+
+## PGAdmin
+
+docker pull dpage/pgadmin4
+docker run -p 5431:80 \
+    --network postgres-network \
+    -e 'PGADMIN_DEFAULT_EMAIL=terje@sentinel.no' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=uK8bzeWk' \
+    -e 'PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION=True' \
+    -e 'PGADMIN_CONFIG_LOGIN_BANNER="Authorised users only!"' \
+    -e 'PGADMIN_CONFIG_CONSOLE_LOG_LEVEL=10' \
+    -d dpage/pgadmin4

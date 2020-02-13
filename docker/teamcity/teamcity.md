@@ -4,7 +4,8 @@
 
 Docker setup for a teamcity-server with postgres, and two teamcity agents. One of the agents is customized to be able to build .net core 2.2 projects.
 
-* The containers run in their own docker network '**teamcity-net**'.
+* The containers run in their own docker network '**teamcity-network
+**'.
 * All containers uses Docker Volumes for storage.
 
 ## Images
@@ -27,10 +28,12 @@ Docker recommends using volumes to persist data beyond a containers lifetime.
 
 ## User defined bridge network
 
-Create the network 'teamcity-net':
+Create the network 'teamcity-network
+':
 
 ```
-docker network create teamcity-net
+docker network create teamcity-network
+
 ```
 
 - Containers connected to the network can resolve eachother by container name or ip.
@@ -39,7 +42,8 @@ docker network create teamcity-net
 # Postgres 
 
 ```
-sudo docker run --name postgres-teamcity --restart always --network teamcity-net \
+sudo docker run --name postgres-teamcity --restart always --network teamcity-network
+ \
         -e POSTGRES_PASSWORD=passwd123 \
         -e POSTGRES_DB=teamcity \
         --mount src=teamcity-postgres,target=/var/lib/postgresql/data \
@@ -51,7 +55,8 @@ sudo docker run --name postgres-teamcity --restart always --network teamcity-net
 Start a container with the psql client.
 
 ```
-docker run -it --rm --network teamcity-net postgres psql -h postgres-teamcity -U postgres
+docker run -it --rm --network teamcity-network
+ postgres psql -h postgres-teamcity -U postgres
 ```
 
 # Teamcity Server
@@ -59,11 +64,12 @@ docker run -it --rm --network teamcity-net postgres psql -h postgres-teamcity -U
 Start the Teamcity server container.
 
 - Uses docker volumes **'teamcity-data'** and **'teamcity-logs'**
-- Connected to the network **'teamcity-net'**
+- Connected to the network **'teamcity-network
+'**
 - Passes in some environment variables for tuning the performance.
 
 ```
-sudo docker run -d --name teamcity --restart always --network teamcity-net \
+docker run -d --name teamcity --restart always --network teamcity-network \
     -e TEAMCITY_SERVER_MEM_OPTS="-Xmx2g -XX:MaxPermSize=270m -XX:ReservedCodeCacheSize=350m" \
     --mount src=teamcity-data,target=/data/teamcity_server/datadir \
     --mount src=teamcity-logs,target=/opt/teamcity/logs \
@@ -80,7 +86,7 @@ Teamcity needs an agent to build for it. You can have both Linux and Windows age
 Start the default linux agent from JetBrains. 
 
 ```
-sudo docker run -d -e SERVER_URL="teamcity:8111" --restart always --network teamcity-net \
+docker run -d -e SERVER_URL="teamcity:8111" --restart always --network teamcity-network \
     -e AGENT_NAME=itchy \
     --mount src=itchy-conf,target=/data/teamcity_agent/conf \
     --privileged -e DOCKER_IN_DOCKER=start \
@@ -120,7 +126,7 @@ docker build -t teamcity-agent2_2:latest .
 ### Start the agent
 
 ```
-sudo docker run -d -e SERVER_URL="teamcity:8111" --name agent-scratchy --restart always --network teamcity-net \
+sudo docker run -d -e SERVER_URL="teamcity:8111" --name agent-scratchy --restart always --network teamcity-network \
     -e AGENT_NAME=scratchy \
     --mount src=scratchy-conf,target=/data/teamcity_agent/conf \
     --privileged -e DOCKER_IN_DOCKER=start \
